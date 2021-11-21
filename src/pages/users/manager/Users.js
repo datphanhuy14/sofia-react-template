@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {v4 as uuidv4} from "uuid";
+import moreIcon from "../../../assets/tables/moreIcon.svg";
 
 import {
   Col,
@@ -9,6 +9,10 @@ import {
   Input,
   Form,
   FormGroup,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
+  Dropdown,
   Pagination,
   PaginationItem,
   PaginationLink,
@@ -27,17 +31,36 @@ import s from "./Users.module.scss";
 const Users = function (props) {
   const [listUsers, setUsers] = useState([]);
   const [searchListUsers, setSearchListUsers] = useState([]);
+  const [checkbox, setCheckbox] = useState(false)
   const [firstTableCurrentPage, setFirstTableCurrentPage] = useState(0);
   const [inputValue, setInputValue] = useState(null);
-  const [delleteUser, setDelleteUser] = useState(null);
+  const [delleteUser, setDelleteUser] = useState([]);
   const pageSize = 4;
   const firstTablePagesCount = Math.ceil(listUsers.length / pageSize);
+  const [tableDropdownOpen, setTableMenuOpen] = useState(false);
 
   function handleSubmit(e) {
     e.preventDefault();
     console.log(e.target.elements.search.value);
     setInputValue(e.target.elements.search.value);
     setUsers(searchListUsers);
+  }
+
+  function onSelect(event) {
+    event.preventDefault()
+    if(checkbox == true) setCheckbox(false);
+    setCheckbox(true).then(() => {})
+    setDelleteUser(event.target.id)
+  }
+
+  const tableMenuOpen = () => {
+    setTableMenuOpen(!tableDropdownOpen);
+  };
+
+  function handleDelete(e) {
+    console.log("123", e.target);
+    // setInputValue(e.target.elements.search.value);
+    // setUsers(searchListUsers);
   }
 
   useEffect(() => {
@@ -127,6 +150,7 @@ const Users = function (props) {
               <Widget>
                 <div className={s.tableTitle}>
                   <div className="headline-2">States Colors</div>
+
                   <div className="d-flex"></div>
                 </div>
                 <div className="widget-table-overflow">
@@ -160,10 +184,11 @@ const Users = function (props) {
                           (firstTableCurrentPage + 1) * pageSize,
                         )
                         .map((item) => (
-                          <tr key={uuidv4()}>
+                          <tr key={item.id}>
                             <td>
                               <div className="checkbox checkbox-primary">
-                                <input
+                                <input defaultChecked={checkbox}
+                                  onChange={onSelect}
                                   id={item.id}
                                   className="styled"
                                   type="checkbox"
@@ -186,7 +211,11 @@ const Users = function (props) {
                               <Button color="primary" size="sm">
                                 Edit
                               </Button>
-                              <Button color="danger" size="sm">
+                              <Button
+                                color="danger"
+                                size="sm"
+                                onClick={handleDelete}
+                              >
                                 Delete
                               </Button>
                             </td>
