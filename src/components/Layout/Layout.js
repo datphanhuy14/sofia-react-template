@@ -18,6 +18,7 @@ import Tables from "../../pages/tables/Tables";
 import Charts from "../../pages/uielements/charts/Charts";
 import Icons from "../../pages/uielements/icons/IconsPage";
 import Maps from "../../pages/uielements/maps/google/GoogleMapPage";
+import Users from "../../pages/users/manager/Users"
 
 // -- Component Styles
 import s from "./Layout.module.scss";
@@ -31,6 +32,11 @@ const Layout = (props) => {
         <main className={s.content}>
           <Breadcrumbs url={props.location.pathname} />
           <Switch>
+            <Route path="/template/users" exact render={() => <Redirect to={"/template/users/charts"} />} />
+            <Route path="/template/users/charts" exact component={Charts} />
+            <Route path="/template/users/manager" exact component={Users} />
+            <Route path="/template/users/icons" exact component={Icons} />
+            <Route path="/template/users/maps" exact component={Maps} />
             <Route path="/template" exact render={() => <Redirect to="template/dashboard"/>} />
             <Route path="/template/dashboard" exact component={Dashboard}/>
             <Route path="/template/typography" exact component={Typography} />

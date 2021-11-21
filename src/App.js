@@ -25,9 +25,9 @@ import isAuthenticated from "./services/authService";
 import "./styles/app.scss";
 
 const PrivateRoute = ({ dispatch, component, ...rest }) => {
-  if (!isAuthenticated(JSON.parse(localStorage.getItem("authenticated")))) {
+  if (!isAuthenticated(localStorage.getItem("jwt"))) {
     dispatch(logoutUser());
-    return (<Redirect to="/login" />)
+    return (<Redirect to="/login"/>)
   } else {
     return (
       <Route { ...rest } render={props => (React.createElement(component, props))} />

@@ -100,9 +100,9 @@ const Login = (props) => {
                 <div className="d-flex align-items-center my-3">
                   <p className="social-label mb-0">Login with</p>
                   <div className="socials">
-                    <a href="https://flatlogic.com/"><GoogleIcon /></a>
+                    <a href="http://127.0.0.1:5000/api/v1/auth/google"><GoogleIcon /></a>
                     <a href="https://flatlogic.com/"><TwitterIcon /></a>
-                    <a href="https://flatlogic.com/"><FacebookIcon /></a>
+                    <a href="http://127.0.0.1:5000/api/v1/auth/facebook"><FacebookIcon /></a>
                     <a href="https://flatlogic.com/"><GithubIcon /></a>
                     <a href="https://flatlogic.com/"><LinkedinIcon /></a>
                   </div>
