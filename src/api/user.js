@@ -5,11 +5,11 @@ class UsersApi {
     return axios.get(`${base}/users`);
   };
 
-  static SeachUsers = (data) => {
+  static SeachUsers(data) {
     return axios.get(`${base}/users?filter=[{"operator":"like","value":"${data}","property":"firstName"}]`);
   };
-  static DeleteUser = (data) => {
-    return axios.delete(`${base}/users/${data.id}`);
+  static DeleteUser(data) {
+    return axios.delete(`${base}/users/${data}`);
   };
 
   static Profile = (data) => {

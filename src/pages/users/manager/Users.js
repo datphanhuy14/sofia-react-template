@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
-import moreIcon from "../../../assets/tables/moreIcon.svg";
-
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import {
   Col,
   Row,
@@ -9,36 +9,26 @@ import {
   Input,
   Form,
   FormGroup,
-  DropdownItem,
-  DropdownMenu,
-  DropdownToggle,
-  Dropdown,
   Pagination,
   PaginationItem,
   PaginationLink,
   Label,
-  Badge,
 } from "reactstrap";
 import Widget from "../../../components/Widget/Widget.js";
-// import TaskContainer from "./components/TaskContainer/TaskContainer.js";
 import UsersApi from "../../../api/user.js";
-// import BootstrapTable from "react-bootstrap-table-next";
-// import paginationFactory from 'react-bootstrap-table2-paginator  ';
-// import MUIDataTable from "mui-datatables";
-
 import s from "./Users.module.scss";
 
 const Users = function (props) {
   const [listUsers, setUsers] = useState([]);
   const [searchListUsers, setSearchListUsers] = useState([]);
-  const [checkbox, setCheckbox] = useState(false)
   const [firstTableCurrentPage, setFirstTableCurrentPage] = useState(0);
   const [inputValue, setInputValue] = useState(null);
-  const [delleteUser, setDelleteUser] = useState([]);
   const pageSize = 4;
   const firstTablePagesCount = Math.ceil(listUsers.length / pageSize);
-  const [tableDropdownOpen, setTableMenuOpen] = useState(false);
 
+  function notify(data) {
+    toast("Deleted!" + data);
+  }
   function handleSubmit(e) {
     e.preventDefault();
     console.log(e.target.elements.search.value);
@@ -46,21 +36,14 @@ const Users = function (props) {
     setUsers(searchListUsers);
   }
 
-  function onSelect(event) {
-    event.preventDefault()
-    if(checkbox == true) setCheckbox(false);
-    setCheckbox(true).then(() => {})
-    setDelleteUser(event.target.id)
-  }
-
-  const tableMenuOpen = () => {
-    setTableMenuOpen(!tableDropdownOpen);
-  };
-
-  function handleDelete(e) {
-    console.log("123", e.target);
-    // setInputValue(e.target.elements.search.value);
-    // setUsers(searchListUsers);
+  async function handleDelete(e) {
+    console.log(e.target.dataset.id);
+    if (window.confirm(`Delete user Id: ${e.target.dataset.id}?`)) {
+      let res = await UsersApi.DeleteUser(e.target.dataset.id);
+      console.log(res);
+      if (res.data.id) notify(res.data.id);
+    }
+    setUsers([]);
   }
 
   useEffect(() => {
@@ -72,12 +55,11 @@ const Users = function (props) {
       return res;
     }
     fetchData();
-  }, []);
+  }, [listUsers]);
 
   useEffect(() => {
     async function fetchData() {
       let res = await UsersApi.SeachUsers(inputValue);
-      console.log(res.data.data);
       res.data.data.rows.forEach((element, index) => (element.key = index));
       setSearchListUsers(res.data.data.rows);
       return res;
@@ -109,9 +91,6 @@ const Users = function (props) {
                           name="search"
                           placeholder="with a placeholder"
                           type="text"
-                          // onChange={(e) => {
-                          //   setInputValue(e.target.value);
-                          // }}
                         />
                       </Col>
                     </FormGroup>
@@ -187,12 +166,7 @@ const Users = function (props) {
                           <tr key={item.id}>
                             <td>
                               <div className="checkbox checkbox-primary">
-                                <input defaultChecked={checkbox}
-                                  onChange={onSelect}
-                                  id={item.id}
-                                  className="styled"
-                                  type="checkbox"
-                                />
+                                <input className="styled" type="checkbox" />
                                 <Label for={item.id} />
                               </div>
                             </td>
@@ -212,6 +186,7 @@ const Users = function (props) {
                                 Edit
                               </Button>
                               <Button
+                                data-id={item.id}
                                 color="danger"
                                 size="sm"
                                 onClick={handleDelete}
